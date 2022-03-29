@@ -58,7 +58,7 @@ export default function MembershipUI({
       setLeaves(lfv);
   }, [addLeafEvents]);
 
-  const calcedSMT = useSMT(leaves);
+  const sm_tree = useSMT(leaves);
 
   const [secrets, setSecrets] = useState([0, 0]);
   const [poseidonHash, setPoseidonHash] = useState()
@@ -73,6 +73,9 @@ export default function MembershipUI({
   const [voteState, setVoteState] = useState(false);
 
   const [activeVoteId, setActiveVoteId] = useState(0);
+  
+  //Group/sensetive info to be hashed with poseidon func
+  const [memberGroup, setMemberGroup] = useState(0);
 
   const voteCount = useContractReader(readContracts, "YourContract", "voteResult", [activeVoteId]);
 
@@ -108,7 +111,7 @@ export default function MembershipUI({
       siblings: new Array(nLevels).fill("0")
     };
 
-    const res = await calcedSMT.insert(BigInt(memberCount.toString()), poseidonHash);
+    const res = await sm_tree.insert(BigInt(memberCount.toString()), poseidonHash);
 
     addLeafInputs.oldKey = res.oldKey;
     addLeafInputs.oldValue = res.oldValue;
@@ -130,11 +133,12 @@ export default function MembershipUI({
       voteId: activeVoteId,
       key: memberKey,
       secret: memberSecret,
-      nullifier: memberNullifier,
+      nullifier: memberNullifier,      
+      groupId: memberGroup,
       siblings: new Array(nLevels + 1).fill(BigInt(0))
     };
 
-    const res = await calcedSMT.find(memberKey);
+    const res = await sm_tree.find(memberKey);
 
     for (let i = 0; i < proveMemberInputs.siblings.length; i++) {
       if (res.siblings[i]) {
@@ -157,6 +161,15 @@ export default function MembershipUI({
 
   return (
     <div style={{padding: "3%"}}>
+       <div style={{ padding: "1%" }}>
+          <div style={{ float: "left" }}>
+            <h4>Group Id:</h4>
+          </div>
+          <Input
+            style={{width: "60vw"}}
+            onChange={(n) => setMemberGroup(n.target.value)}
+          />
+      </div>
       <div style={{padding: "3%"}}>
         <Statistic
           value={root}
@@ -165,7 +178,7 @@ export default function MembershipUI({
           valueStyle={{ fontSize: "0.8em" }}
         />
         <Statistic
-          value={calcedSMT.root}
+          value={sm_tree.root}
           title="Calculated Root"
           groupSeparator=""
           valueStyle={{ fontSize: "0.8em" }}
@@ -184,11 +197,15 @@ export default function MembershipUI({
             Generate Secrets
           </Button>
         </div>
-        <Collapse>
-          <Panel>
+        <Collapse defaultActiveKey={['1']} >
+          <Panel key = "1" >
+            <h4>Secret:</h4>
             <Text code copyable type="danger">{secrets[0].toString()}</Text>
+            <Divider />
+            <h4>Nullifier:</h4>
             <Text code copyable type="danger">{secrets[1].toString()}</Text>
-            <Text code copyable type="warning">{poseidonHash ? poseidonHash.toString() : 0}</Text>
+            <Divider />
+            <Text code copyable type="danger">{poseidonHash ? poseidonHash.toString() : 0}</Text>
           </Panel>
         </Collapse>
         <div style={{padding: "3%"}}>
@@ -228,7 +245,13 @@ export default function MembershipUI({
 
         <div style={{ padding: "3%" }}>
           <Button
-            onClick={() => tx( writeContracts.YourContract.createVote(Math.floor(Date.now() / 1000) + 1020) )}
+            onClick={() => {
+              console.log(new Date(Date.now()).toString()); //deadline    
+              const deadline = Math.floor(Date.now() / 1000) + 30* 1000; //30 sec deadline to vote    
+              tx( writeContracts.YourContract.createVote(deadline) );
+
+                        }
+                    }
           >
             Create a New Vote
           </Button>
@@ -278,14 +301,14 @@ export default function MembershipUI({
             // disabled={voteState}
             onClick={() => setVoteState(true)}
           >
-            Vote YES
+            Vote Yes
           </Button>
           <Button
             type={!voteState ? "primary" : undefined}
             // disabled={!voteState}
             onClick={() => setVoteState(false)}
           >
-            Vote NO
+            Vote No
           </Button>
         </div>
         <div style={{ padding: "3%" }}>
@@ -304,7 +327,7 @@ export default function MembershipUI({
               tx( writeContracts.YourContract.proveMembership(...proveMemCalldata, voteState) )
             }}
           >
-            Prove
+            On-chain Prove
           </Button>
         </div>
       </div>

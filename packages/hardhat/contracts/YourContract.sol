@@ -37,8 +37,6 @@ contract YourContract {
     function createVote(uint256 deadline) external {
         require(deadline > block.timestamp, "createVote: Invalid Deadline");
 
-        // TODO: check if he voted before or not?
-        
         uint256 voteId = voteNonce;
         voteNonce++;
         voteDeadline[voteId] = deadline;
@@ -73,8 +71,9 @@ contract YourContract {
         uint[3] memory input,
         bool slant
     ) external returns (bool r) {
+        console.log(" ----- deadline: ",voteDeadline[input[2]] );
         require(voteLogged[input[0]] != true, "proveMembership: Vote Logged");
-        require(voteDeadline[input[2]] > block.timestamp, "proveMembership: Deadline Passed");
+        // require(voteDeadline[input[2]] > block.timestamp, "Deadline Has Passed");
         require(input[1] == root, "proveMembership: Invalid Root");
 
         r = verifyProveInTreeProof(a, b, c, input);

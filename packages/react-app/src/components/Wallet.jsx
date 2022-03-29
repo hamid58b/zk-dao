@@ -288,65 +288,62 @@ export default function Wallet(props) {
     );
   }
 
-  return <></>
+  return (
+    <span>
+      {providerSend}
+      <Modal
+        visible={open}
+        title={
+          <div>
+            {selectedAddress ? <Address address={selectedAddress} ensProvider={props.ensProvider} /> : <Spin />}
+            <div style={{ float: "right", paddingRight: 25 }}>
+              <Balance address={selectedAddress} provider={props.provider} dollarMultiplier={props.price} />
+            </div>
+          </div>
+        }
+        onOk={() => {
+          setQr();
+          setPK();
+          setOpen(!open);
+        }}
+        onCancel={() => {
+          setQr();
+          setPK();
+          setOpen(!open);
+        }}
+        footer={[
+          privateKeyButton,
+          receiveButton,
+          <Button
+            key="submit"
+            type="primary"
+            disabled={!amount || !toAddress || qr}
+            loading={false}
+            onClick={() => {
+              const tx = Transactor(props.signer || props.provider);
 
-  
-  // return (
-  //   <span>
-  //     {providerSend}
-  //     <Modal
-  //       visible={open}
-  //       title={
-  //         <div>
-  //           {selectedAddress ? <Address address={selectedAddress} ensProvider={props.ensProvider} /> : <Spin />}
-  //           <div style={{ float: "right", paddingRight: 25 }}>
-  //             <Balance address={selectedAddress} provider={props.provider} dollarMultiplier={props.price} />
-  //           </div>
-  //         </div>
-  //       }
-  //       onOk={() => {
-  //         setQr();
-  //         setPK();
-  //         setOpen(!open);
-  //       }}
-  //       onCancel={() => {
-  //         setQr();
-  //         setPK();
-  //         setOpen(!open);
-  //       }}
-  //       footer={[
-  //         privateKeyButton,
-  //         receiveButton,
-  //         <Button
-  //           key="submit"
-  //           type="primary"
-  //           disabled={!amount || !toAddress || qr}
-  //           loading={false}
-  //           onClick={() => {
-  //             const tx = Transactor(props.signer || props.provider);
+              let value;
+              try {
+                value = ethers.utils.parseEther("" + amount);
+              } catch (e) {
+                // failed to parseEther, try something else
+                value = ethers.utils.parseEther("" + parseFloat(amount).toFixed(8));
+              }
 
-  //             let value;
-  //             try {
-  //               value = ethers.utils.parseEther("" + amount);
-  //             } catch (e) {
-  //               // failed to parseEther, try something else
-  //               value = ethers.utils.parseEther("" + parseFloat(amount).toFixed(8));
-  //             }
-
-  //             tx({
-  //               to: toAddress,
-  //               value,
-  //             });
-  //             setOpen(!open);
-  //             setQr();
-  //           }}
-  //         >
-  //           <SendOutlined /> Send
-  //         </Button>,
-  //       ]}
-  //     >
-  //       {display}
-  //     </Modal>
-  //   </span>
-  // );
+              tx({
+                to: toAddress,
+                value,
+              });
+              setOpen(!open);
+              setQr();
+            }}
+          >
+            <SendOutlined /> Send
+          </Button>,
+        ]}
+      >
+        {display}
+      </Modal>
+    </span>
+  );
 }

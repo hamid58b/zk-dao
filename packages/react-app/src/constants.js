@@ -170,7 +170,7 @@ export const NETWORKS = {
     gasPrice: 225000000000,
   },
   testnetHarmony: {
-    name: "Harmony Testnet",
+    name: "testnetHarmony",
     color: "#00b0ef",
     chainId: 1666700000,
     blockExplorer: "https://explorer.pops.one/",

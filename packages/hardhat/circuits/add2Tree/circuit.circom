@@ -2,8 +2,8 @@ include "../../node_modules/circomlib/circuits/smt/smtprocessor.circom";
 include "../../node_modules/circomlib/circuits/comparators.circom";
 
 template Add2Tree(nLevels) {
-  signal input oldRoot;         // should be defined in contract
-  signal input newKey;           // should be defined in contract
+  signal input oldRoot; // should be defined in contract
+  signal input newKey;  // should be defined in contract
   signal input newValue;
   signal input oldKey;
   signal input oldValue;
@@ -29,4 +29,4 @@ template Add2Tree(nLevels) {
 }
 
 component main = Add2Tree(3);
-//component main = SMTProcessor(3);
+//component main = SMTProcessor(128);

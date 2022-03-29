@@ -299,7 +299,7 @@ module.exports = {
     },
     testnetHarmony: {
       url: "https://api.s0.b.hmny.io",
-      gasPrice: 1000000000,
+      gasPrice: 100000000000,
       chainId: 1666700000,
       accounts: {
         mnemonic: mnemonic(),

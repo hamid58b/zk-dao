@@ -53,21 +53,19 @@ export default function Balance(props) {
     displayBalance = "$" + (floatBalance * price).toFixed(2);
   }
 
-  return <></>
- 
-  // return (
-  //   <span
-  //     style={{
-  //       verticalAlign: "middle",
-  //       fontSize: props.size ? props.size : 24,
-  //       padding: 8,
-  //       cursor: "pointer",
-  //     }}
-  //     onClick={() => {
-  //       setDollarMode(!dollarMode);
-  //     }}
-  //   >
-  //     {displayBalance}
-  //   </span>
-  // );
+  return (
+    <span
+      style={{
+        verticalAlign: "middle",
+        fontSize: props.size ? props.size : 24,
+        padding: 8,
+        cursor: "pointer",
+      }}
+      onClick={() => {
+        setDollarMode(!dollarMode);
+      }}
+    >
+      {/* {displayBalance} */}
+    </span>
+  );
 }
