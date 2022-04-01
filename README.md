@@ -6,6 +6,10 @@ Then, you  will need three terminals to run the code
 - deploy smart contract by: `yarn deploy`
 - finally, to run the UI: `yarn start`
 
+## Deploy on Harmony Testnet
+
+Run the following command on the main direcory:
+`yarn workspace @scaffold-eth/hardhat deploy --reset --network testnetHarmony`
 
 ## Smart contracts
 
