@@ -7,6 +7,8 @@ Then, you  will need three terminals to run the code
 - finally, to run the UI: `yarn start`
 
 ## Deploy on Harmony Testnet
+Delete the build and node_module in a case the react is still reading from the cache.
+Then run `yarn build` and finally run  `yarn surge`.
 
 Run the following command on the main direcory:
 `yarn workspace @scaffold-eth/hardhat deploy --reset --network testnetHarmony`
