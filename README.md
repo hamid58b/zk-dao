@@ -13,6 +13,8 @@ Then run `yarn build` and finally run  `yarn surge`.
 Run the following command on the main direcory:
 `yarn workspace @scaffold-eth/hardhat deploy --reset --network testnetHarmony`
 
+- Harmony faucet: [link](https://faucet.pops.one/)
+
 ## Smart contracts
 
 verifier and contract are in in the [hardhat folder](packages/hardhat/contracts/).
